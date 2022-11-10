@@ -23,6 +23,9 @@
         <result column="sku_props" jdbcType="VARCHAR" property="skuProps"/>
         <result column="product_name" jdbcType="VARCHAR" property="productName"/>
         <result column="url" jdbcType="VARCHAR" property="productImg"/>
+        <result column="original_price" jdbcType="VARCHAR" property="originalPrice"/>
+        <result column="sell_price" jdbcType="VARCHAR" property="sellPrice"/>
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
     </resultMap>
 
     <select id="selectShopcartByUserId" resultMap="ShoppingCartVOMap">
@@ -35,11 +38,17 @@
                c.product_price,
                c.sku_props,
                p.product_name,
-               i.url
+               i.url,
+               s.original_price,
+               s.sell_price,
+               s.sku_name
         from shopping_cart c
                  INNER JOIN product p
                  INNER JOIN product_img i
-                            ON c.product_id = p.product_id and i.item_id = p.product_id
+                 INNER JOIN product_sku s
+                 ON c.product_id = p.product_id
+                 and i.item_id = p.product_id
+                 and c.sku_id = s.sku_id
         where user_id = #{userId}
           and i.is_main = 1
     </select>
