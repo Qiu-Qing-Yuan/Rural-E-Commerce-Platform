@@ -8,4 +8,6 @@ public interface ShoppingCartService {
     public ResultVO addShoppingCart(ShoppingCart cart);
 
     public ResultVO listShoppingCartsByUserId(int userId);
+
+    public ResultVO updateCartNum(int cartId,int cartNum);
 }

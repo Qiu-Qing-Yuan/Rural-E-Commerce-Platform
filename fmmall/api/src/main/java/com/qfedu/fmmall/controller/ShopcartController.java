@@ -12,7 +12,6 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -44,5 +43,14 @@ public class ShopcartController {
         ResultVO resultVO = shoppingCartService.listShoppingCartsByUserId(userId);
         return resultVO;
     }
+
+    @PutMapping("/update/{cid}/{cnum}")
+    public ResultVO updateNum(@PathVariable("cid") Integer cartId,
+                              @PathVariable("cnum") Integer carNum,
+                              @RequestHeader("token") String token ){
+        ResultVO resultVO = shoppingCartService.updateCartNum(cartId, carNum);
+        return resultVO;
+    }
+
 }
 

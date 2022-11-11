@@ -52,4 +52,8 @@
         where user_id = #{userId}
           and i.is_main = 1
     </select>
+
+    <update id="updateCartNumByCartId">
+        update shopping_cart set cart_num = #{cartNum} where cart_id = #{cartId}
+    </update>
 </mapper>

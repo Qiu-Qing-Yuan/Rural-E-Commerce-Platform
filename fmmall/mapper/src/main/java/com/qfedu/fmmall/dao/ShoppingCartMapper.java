@@ -4,6 +4,7 @@ import com.qfedu.fmmall.entity.ShoppingCart;
 import com.qfedu.fmmall.entity.ShoppingCartVO;
 import com.qfedu.fmmall.general.GeneralDAO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,4 +13,7 @@ import java.util.List;
 public interface ShoppingCartMapper extends GeneralDAO<ShoppingCart> {
 
     public List<ShoppingCartVO> selectShopcartByUserId(int userId);
+
+    public int updateCartNumByCartId(@Param("cartId") int cartId,
+                                     @Param("cartNum") int cartNum);
 }
