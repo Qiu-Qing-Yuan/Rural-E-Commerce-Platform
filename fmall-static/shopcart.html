@@ -384,11 +384,11 @@
 						});
 					},
 					gotoOrderAdd:function(){
-						if(this.opts.length ==0){
-							alert("请选择要购买的商品！")
+						if(this.opts.length == 0){
+							alert("请选择要购买的商品！");
 						}else{
 							//1.获取选择购物车记录的id [0,2]  --->  cartId 8   cartId 10 --- 8,10,   
-							var cids="";
+							var cids=""; 
 							for(var i=0;i<this.opts.length; i++){
 								var index = this.opts[i];
 								var cartId = this.shopcarts[index].cartId;
@@ -399,6 +399,7 @@
 								}
 							}
 							//2.跳转到order-add.html，并cids传递过去
+							// console.log(cids);
 							window.location.href="order-add.html?cids="+cids;
 						}
 					}
