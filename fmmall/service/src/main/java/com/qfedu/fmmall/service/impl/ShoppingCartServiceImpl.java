@@ -6,14 +6,15 @@ import com.qfedu.fmmall.entity.ShoppingCartVO;
 import com.qfedu.fmmall.service.ShoppingCartService;
 import com.qfedu.fmmall.vo.ResStatus;
 import com.qfedu.fmmall.vo.ResultVO;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author QiuQingyuan
@@ -55,4 +56,21 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             return new ResultVO(ResStatus.NO,"update fail",null);
         }
     }
+
+    @Override
+    public ResultVO listShoppingCartsByCids(String cids) {
+        //使用tkmapper只能查询到某张表中拥有的字段，因此无法查询到商品名称、图片、单价等信息
+//        Example example = new Example(ShoppingCart.class);
+        String[] split = cids.split(",");
+        List<Integer> cartIds = new ArrayList<>();//Collections 和 Arrays工具类
+        for (int i = 0; i < split.length; i++) {
+            cartIds.add(Integer.parseInt(split[i]));
+        }
+
+        List<ShoppingCartVO> list = shoppingCartMapper.selectShopcartByCids(cartIds);
+        ResultVO resultVO = new ResultVO(ResStatus.OK, "success", list);
+        return resultVO;
+    }
+
+
 }

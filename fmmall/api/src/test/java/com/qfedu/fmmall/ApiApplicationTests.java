@@ -10,9 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.annotation.Resource;
-import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -65,7 +63,11 @@ class ApiApplicationTests {
 
     @Test
     public void testShopCart(){
-        List<ShoppingCartVO> shoppingCartVOS = shoppingCartMapper.selectShopcartByUserId(1);
-        shoppingCartVOS.forEach(System.out::println);
+//        List<ShoppingCartVO> shoppingCartVOS = shoppingCartMapper.selectShopcartByUserId(1);
+//        ArrayList<Integer> cids = new ArrayList<>();
+//        cids.add(7);
+//        cids.add(8);
+//        List<ShoppingCartVO> shoppingCartVOS = shoppingCartMapper.selectShopcartByCids(cids);
+//        shoppingCartVOS.forEach(System.out::println);
     }
 }

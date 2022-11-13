@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author QiuQingyuan
  * @version 1.0
@@ -52,5 +54,11 @@ public class ShopcartController {
         return resultVO;
     }
 
+    @GetMapping("/listbycids")
+    @ApiImplicitParam(dataType = "String", name = "cids", value = "选择的购物车记录的ID", required = true)
+    public ResultVO listByCids(String cids, @RequestHeader("token")String token){
+        ResultVO resultVO = shoppingCartService.listShoppingCartsByCids(cids);
+        return resultVO;
+    }
 }
 
