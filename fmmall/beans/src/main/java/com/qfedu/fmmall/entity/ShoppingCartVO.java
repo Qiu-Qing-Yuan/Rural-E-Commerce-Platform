@@ -30,5 +30,6 @@ public class ShoppingCartVO {
     private double originalPrice;
     private double sellPrice;
     private String skuName;
+    private int skuStock;//库存信息
 
 }

@@ -28,6 +28,24 @@
         <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
     </resultMap>
 
+
+    <resultMap id="ShoppingCartVOMap2" type="com.qfedu.fmmall.entity.ShoppingCartVO">
+        <id column="cart_id" jdbcType="INTEGER" property="cartId"/>
+        <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        <result column="sku_id" jdbcType="VARCHAR" property="skuId"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="cart_num" jdbcType="VARCHAR" property="cartNum"/>
+        <result column="cart_time" jdbcType="VARCHAR" property="cartTime"/>
+        <result column="product_price" jdbcType="DECIMAL" property="productPrice"/>
+        <result column="sku_props" jdbcType="VARCHAR" property="skuProps"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="url" jdbcType="VARCHAR" property="productImg"/>
+        <result column="original_price" jdbcType="VARCHAR" property="originalPrice"/>
+        <result column="sell_price" jdbcType="VARCHAR" property="sellPrice"/>
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
+        <result column="stock"  property="skuStock"/>
+    </resultMap>
+
     <select id="selectShopcartByUserId" resultMap="ShoppingCartVOMap">
         select c.cart_id,
                c.product_id,
@@ -57,7 +75,7 @@
         update shopping_cart set cart_num = #{cartNum} where cart_id = #{cartId}
     </update>
 
-    <select id="selectShopcartByCids" resultMap="ShoppingCartVOMap">
+    <select id="selectShopcartByCids" resultMap="ShoppingCartVOMap2">
         select c.cart_id,
                c.product_id,
                c.sku_id,
@@ -70,7 +88,8 @@
                i.url,
                s.original_price,
                s.sell_price,
-               s.sku_name
+               s.sku_name,
+               s.stock
         from shopping_cart c
                  INNER JOIN product p
                  INNER JOIN product_img i

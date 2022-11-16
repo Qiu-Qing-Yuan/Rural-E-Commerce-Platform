@@ -5,6 +5,8 @@ import com.qfedu.fmmall.dao.ProductCommentsMapper;
 import com.qfedu.fmmall.dao.ProductMapper;
 import com.qfedu.fmmall.dao.ShoppingCartMapper;
 import com.qfedu.fmmall.entity.*;
+import com.qfedu.fmmall.vo.ResStatus;
+import com.qfedu.fmmall.vo.ResultVO;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,11 +65,13 @@ class ApiApplicationTests {
 
     @Test
     public void testShopCart(){
-//        List<ShoppingCartVO> shoppingCartVOS = shoppingCartMapper.selectShopcartByUserId(1);
-//        ArrayList<Integer> cids = new ArrayList<>();
-//        cids.add(7);
-//        cids.add(8);
-//        List<ShoppingCartVO> shoppingCartVOS = shoppingCartMapper.selectShopcartByCids(cids);
-//        shoppingCartVOS.forEach(System.out::println);
+        String cids = "7,8";
+        String[] arr = cids.split(",");
+        List<Integer> cidList = new ArrayList<>();
+        for (int i=0;i<arr.length;i++){
+            cidList.add(Integer.parseInt(arr[i]));
+        }
+        List<ShoppingCartVO> list = shoppingCartMapper.selectShopcartByCids(cidList);
+        list.forEach(System.out::println);
     }
 }
