@@ -8,4 +8,6 @@ spring:
 mybatis:
   mapper-locations: classpath:mappers/*Mapper.xml
   type-aliases-package: com.qfedu.fmmall.entity
-
+logging:
+  level:
+    io.swagger.models.parameters.AbstractSerializableParameter: error
