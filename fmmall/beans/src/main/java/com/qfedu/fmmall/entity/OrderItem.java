@@ -85,6 +85,22 @@ public class OrderItem {
     @Column(name = "is_comment")
     private Integer isComment;
 
+    public OrderItem(String itemId, String orderId, String productId, String productName, String productImg, String skuId, String skuName, BigDecimal productPrice, Integer buyCounts, BigDecimal totalAmount, Date basketDate, Date buyTime, Integer isComment) {
+        this.itemId = itemId;
+        this.orderId = orderId;
+        this.productId = productId;
+        this.productName = productName;
+        this.productImg = productImg;
+        this.skuId = skuId;
+        this.skuName = skuName;
+        this.productPrice = productPrice;
+        this.buyCounts = buyCounts;
+        this.totalAmount = totalAmount;
+        this.basketDate = basketDate;
+        this.buyTime = buyTime;
+        this.isComment = isComment;
+    }
+
     /**
      * 获取订单项ID
      *
