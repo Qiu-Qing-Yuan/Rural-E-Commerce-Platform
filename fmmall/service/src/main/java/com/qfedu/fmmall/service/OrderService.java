@@ -4,8 +4,9 @@ import com.qfedu.fmmall.entity.Orders;
 import com.qfedu.fmmall.vo.ResultVO;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 public interface OrderService {
 
-    public ResultVO addOrder(String cids, Orders order) throws SQLException;
+    public Map<String,String> addOrder(String cids, Orders order) throws SQLException;
 }

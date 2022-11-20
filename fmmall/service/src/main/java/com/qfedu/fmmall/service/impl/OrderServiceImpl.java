@@ -9,8 +9,6 @@ import com.qfedu.fmmall.entity.Orders;
 import com.qfedu.fmmall.entity.ProductSku;
 import com.qfedu.fmmall.entity.ShoppingCartVO;
 import com.qfedu.fmmall.service.OrderService;
-import com.qfedu.fmmall.vo.ResStatus;
-import com.qfedu.fmmall.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +49,8 @@ public class OrderServiceImpl implements OrderService {
      *@return:
      **/
     @Transactional//如果没有，每一次数据库操作都会单独完成，有：所有数据库操作都成功之后才会一起完成
-    public ResultVO addOrder(String cids, Orders order) throws SQLException {
+    public Map<String,String> addOrder(String cids, Orders order) throws SQLException {
+        Map<String,String> map = new HashMap<>();
         //1.校验库存：根据cids查询当前订单中关联的购物车记录详情（包括库存）
         String[] arr = cids.split(",");
         List<Integer> cidList = new ArrayList<>();
@@ -117,10 +116,13 @@ public class OrderServiceImpl implements OrderService {
             for(int cid: cidList){
                 shoppingCartMapper.deleteByPrimaryKey(cid);
             }
-            return new ResultVO(ResStatus.OK, "下单成功！", orderId);
-
+//            return new ResultVO(ResStatus.OK, "下单成功！", orderId);
+            map.put("orderId",orderId);
+            map.put("productNames",untitled);
+            return map;
         } else {
-            return new ResultVO(ResStatus.NO, "库存不足，下单失败！", null);
+//            return new ResultVO(ResStatus.NO, "库存不足，下单失败！", null);
+            return null;
         }
     }
 }
