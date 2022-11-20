@@ -53,7 +53,11 @@ public class OrderController {
                 WXPay wxPay = new WXPay(new MyPayConfig());
                 //发送请求，获取响应
                 Map<String, String> resp = wxPay.unifiedOrder(data);
-                System.out.println(resp);
+                //支付链接
+                orderInfo.put("payUrl",resp.get("code_url"));
+//                System.out.println(resp);
+                resultVO = new ResultVO(ResStatus.OK, "提交订单成功！", orderInfo);
+
             }else{
                 resultVO = new ResultVO(ResStatus.NO, "提交订单失败！", null);
             }
