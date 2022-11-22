@@ -513,9 +513,9 @@
 							token: getCookieValue("token")
 						},
 						params: {
-							cids: this.cartIds
+							cids: this.cartIds //请求行
 						},
-						data: order
+						data: order //order本身是个对象
 					}).then((res) => {
 						if (res.data.code == 10000) {
 							//跳转到支付页面显示支付二维码
