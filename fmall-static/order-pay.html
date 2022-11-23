@@ -161,7 +161,7 @@
 			data: {
 				orderInfo: {}
 			},
-			//vue声明周期 ：  创建对象---beforeCreate---初始化data---created---加载模版---beforeMount---渲染数据---mounted
+			//vue声明周期 ：  创建对象---beforeCreate---初始化data---created---加载模版（加载显示二维码的div）---beforeMount---渲染数据---mounted
 			created: function () {
 				var jsonstr = localStorage.getItem("orderInfo");
 				if (jsonstr != null) {
@@ -170,6 +170,7 @@
 				this.orderInfo = eval("(" + jsonstr + ")");
 			},
 			mounted: function () {
+				//在created中加载不出来：created还没有加载模板，所以找不到div
 				//渲染二维码
 				var qrcode = new QRCode($("#payQrcodeDiv")[0], {
 					width: 200,

@@ -9,4 +9,6 @@ import java.util.Map;
 public interface OrderService {
 
     public Map<String,String> addOrder(String cids, Orders order) throws SQLException;
+
+    public int updateOrderStatus(String orderId,String status);
 }

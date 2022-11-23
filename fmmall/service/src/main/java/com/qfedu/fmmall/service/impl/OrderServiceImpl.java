@@ -125,4 +125,9 @@ public class OrderServiceImpl implements OrderService {
             return null;
         }
     }
+
+    @Override
+    public int updateOrderStatus(String orderId, String status) {
+        return 0;
+    }
 }

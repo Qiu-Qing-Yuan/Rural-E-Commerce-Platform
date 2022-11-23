@@ -47,7 +47,7 @@ public class OrderController {
                 data.put("fee_type","CNY");       //支付比重
                 data.put("total_fee",order.getActualAmount()*100+"");     //支付金额 1分
                 data.put("trade_type","NATIVE");//交易类型
-                data.put("notify_url","/pay/success");      //设置支付完成时的回调方法接口
+                data.put("notify_url","http://qqy.free.idcfengye.com/pay/callback");      //设置支付完成时的回调方法接口
 
                 //微信支付：申请支付链接
                 WXPay wxPay = new WXPay(new MyPayConfig());

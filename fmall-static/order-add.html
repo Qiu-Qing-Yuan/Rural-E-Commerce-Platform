@@ -522,7 +522,7 @@
 							var orderInfo = res.data.data; // {orderId:"123123",productNames:"aseraer",payUrl:"weixin://...."}
 							orderInfo.totalPrice = this.totalPrice; // {orderId:"123123",productNames:"aseraer",payUrl:"weixin://....",totalPrice:18.8}
 
-							localStorage.setItem("orderInfo", JSON.stringify(orderInfo));
+							localStorage.setItem("orderInfo", JSON.stringify(orderInfo));//localStorage不能传对象，只能传字符串
 							window.location.href = "order-pay.html";
 						} else if (res.data.code == 20001 || res.data.code == 20002) {
 							window.location.href = "login.html";
