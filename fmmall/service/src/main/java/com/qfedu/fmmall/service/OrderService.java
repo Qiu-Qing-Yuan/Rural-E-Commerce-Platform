@@ -11,4 +11,6 @@ public interface OrderService {
     public Map<String,String> addOrder(String cids, Orders order) throws SQLException;
 
     public int updateOrderStatus(String orderId,String status);
+
+    public ResultVO getOrderById(String orderId);
 }

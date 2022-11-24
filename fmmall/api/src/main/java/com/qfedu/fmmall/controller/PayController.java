@@ -2,6 +2,8 @@ package com.qfedu.fmmall.controller;
 
 import com.github.wxpay.sdk.WXPayConfig;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.qfedu.fmmall.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +23,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/pay")
 public class PayController {
+
+    @Autowired
+    private OrderService orderService;
 
     /*
      * 回调接口:当用户支付成功之后，微信支付平台就会请求这个接口，将支付状态的数据传递过来
@@ -44,14 +49,18 @@ public class PayController {
         if (map != null && "success".equalsIgnoreCase(map.get("result_code"))) {
             //支付成功
             //2、修改订单状态为“待发货/已支付”
-
+            String orderId = map.get("out_trade_no");
+            int i = orderService.updateOrderStatus(orderId, "2");
+            System.out.println("----orderId"+orderId);
             //3、响应微信支付平台(若不响应，微信平台频繁请求)
-            HashMap<String, String> resp = new HashMap<>();
-            resp.put("return_code","success");
-            resp.put("return_msg","OK");
-            resp.put("appid",map.get("appid"));
-            resp.put("result_code","success");
-            return WXPayUtil.mapToXml(resp);
+            if(i>0){
+                HashMap<String, String> resp = new HashMap<>();
+                resp.put("return_code","success");
+                resp.put("return_msg","OK");
+                resp.put("appid",map.get("appid"));
+                resp.put("result_code","success");
+                return WXPayUtil.mapToXml(resp);
+            }
         }
         return null;
 

@@ -9,6 +9,8 @@ import com.qfedu.fmmall.entity.Orders;
 import com.qfedu.fmmall.entity.ProductSku;
 import com.qfedu.fmmall.entity.ShoppingCartVO;
 import com.qfedu.fmmall.service.OrderService;
+import com.qfedu.fmmall.vo.ResStatus;
+import com.qfedu.fmmall.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,6 +130,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public int updateOrderStatus(String orderId, String status) {
-        return 0;
+        Orders orders = new Orders();
+        orders.setOrderId(orderId);
+        orders.setStatus(status);
+        return ordersMapper.updateByPrimaryKeySelective(orders);
+    }
+
+    @Override
+    public ResultVO getOrderById(String orderId) {
+        Orders order = ordersMapper.selectByPrimaryKey(orderId);
+        return new ResultVO(ResStatus.OK,"success",order.getStatus());
     }
 }
