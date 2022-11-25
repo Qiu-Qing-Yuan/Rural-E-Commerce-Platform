@@ -3,6 +3,7 @@ package com.qfedu.fmmall.controller;
 import com.github.wxpay.sdk.WXPayConfig;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.qfedu.fmmall.service.OrderService;
+import com.qfedu.fmmall.websocket.WebSocketServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.Session;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +54,11 @@ public class PayController {
             String orderId = map.get("out_trade_no");
             int i = orderService.updateOrderStatus(orderId, "2");
             System.out.println("----orderId"+orderId);
-            //3、响应微信支付平台(若不响应，微信平台频繁请求)
+
+            //3、通过websocket连接，向前端推送数据
+            WebSocketServer.sendMsg(orderId,"1");
+
+            //4、响应微信支付平台(若不响应，微信平台频繁请求)
             if(i>0){
                 HashMap<String, String> resp = new HashMap<>();
                 resp.put("return_code","success");

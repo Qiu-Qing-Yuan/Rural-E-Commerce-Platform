@@ -155,7 +155,8 @@
 	<script type="text/javascript" src="static/js/qrcode.min.js"></script>
 	<script type="text/javascript" src="static/js/base.js"></script>
 	<script type="text/javascript">
-
+		baseUrl = "http://lcoalhost:8080/";
+		var webSocketBaseUrl = "ws://localhost:8080/";
 		var vm = new Vue({
 			el: "#container",
 			data: {
@@ -189,9 +190,9 @@
 					}
 				}
 
-				//轮询访问是否付款
-				/**
-				var oid = this.orderInfo.orderId;
+				//setTimeout延时一秒只执行一次
+				//setInterval 轮询访问是否付款  设置一个循环，每隔一秒钟执行一次
+		/* 		var oid = this.orderInfo.orderId;
 				var i = setInterval(function(){
 					console.log("-----");
 					var url = baseUrl+"order/status/"+oid;
@@ -207,8 +208,7 @@
 							clearInterval(i);
 						}
 					});
-				},1000);**/
-
+				},1000); */
 			}
 		});
 	</script>
