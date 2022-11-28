@@ -28,10 +28,8 @@ public class PayController {
 
     @Autowired
     private OrderService orderService;
-
     /*
      * 回调接口:当用户支付成功之后，微信支付平台就会请求这个接口，将支付状态的数据传递过来
-     *
      * */
     @PostMapping("/callback")
     public String paySuccess(HttpServletRequest request) throws Exception {
@@ -54,10 +52,8 @@ public class PayController {
             String orderId = map.get("out_trade_no");
             int i = orderService.updateOrderStatus(orderId, "2");
             System.out.println("----orderId"+orderId);
-
             //3、通过websocket连接，向前端推送数据
             WebSocketServer.sendMsg(orderId,"1");
-
             //4、响应微信支付平台(若不响应，微信平台频繁请求)
             if(i>0){
                 HashMap<String, String> resp = new HashMap<>();
@@ -69,7 +65,5 @@ public class PayController {
             }
         }
         return null;
-
-
     }
 }
