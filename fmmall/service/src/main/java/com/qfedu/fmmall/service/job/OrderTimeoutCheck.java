@@ -1,22 +1,16 @@
 package com.qfedu.fmmall.service.job;
-
 import com.github.wxpay.sdk.WXPay;
-import com.qfedu.fmmall.dao.OrderItemMapper;
 import com.qfedu.fmmall.dao.OrdersMapper;
-import com.qfedu.fmmall.dao.ProductSkuMapper;
-import com.qfedu.fmmall.entity.OrderItem;
 import com.qfedu.fmmall.entity.Orders;
-import com.qfedu.fmmall.entity.ProductSku;
+import com.qfedu.fmmall.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.entity.Example;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 /**
  * @author QiuQingyuan
  * @version 1.0
@@ -30,10 +24,7 @@ public class OrderTimeoutCheck {
     private OrdersMapper ordersMapper;
 
     @Autowired
-    private OrderItemMapper orderItemMapper;
-
-    @Autowired
-    private ProductSkuMapper productSkuMapper;
+    private OrderService orderService;
 
     private final WXPay wxPay = new WXPay(new MyPayConfig());
 
@@ -59,16 +50,10 @@ public class OrderTimeoutCheck {
                 }else if("NOTPAY".equalsIgnoreCase(resp.get("trade_state"))){
                     //2.2 如果确实未支付则取消订单
                     //a、向微信支付平台发送请求，关闭当前订单的支付链接
-                    HashMap<String, String> closeParams = new HashMap<>();
-
                     Map<String, String> map = wxPay.closeOrder(params);
                     System.out.println(map);
-
-
-                   //关闭订单
-
-
-
+                   //b.关闭订单
+                    orderService.closeOrder(order.getOrderId());
                 }
             }
             } catch(Exception e){

@@ -13,6 +13,7 @@ import com.qfedu.fmmall.vo.ResStatus;
 import com.qfedu.fmmall.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
@@ -97,6 +98,7 @@ public class OrderServiceImpl implements OrderService {
                         sc.getProductImg(), sc.getSkuId(), sc.getSkuName(), new BigDecimal(sc.getSellPrice()),
                         cnum, new BigDecimal(sc.getSellPrice() * cnum), new Date(), new Date(), 0);
                 int m = orderItemMapper.insert(orderItem);
+                //增加商品销量->回调业务
             }
             //4、扣减库存：根据套餐ID修改套餐库存量
             //商品1 奥利奥小饼干    套餐ID 4  2   500
@@ -143,29 +145,31 @@ public class OrderServiceImpl implements OrderService {
         return new ResultVO(ResStatus.OK,"success",order.getStatus());
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void closeOrder(String orderId){
-        /*1、修改状态*/
-        //b、修改当前订单：status=6 已关闭； close_type=1 超时未支付
-        Orders cancleOrder = new Orders();
-        cancleOrder.setOrderId(orderId);
-        cancleOrder.setStatus("6"); //已关闭
-        cancleOrder.setCloseType(1); //关闭类型：超时未支付
-        ordersMapper.updateByPrimaryKeySelective(cancleOrder);
+        synchronized (this) {
+            /*1、修改状态*/
+            //b、修改当前订单：status=6 已关闭； close_type=1 超时未支付
+            Orders cancleOrder = new Orders();
+            cancleOrder.setOrderId(orderId);
+            cancleOrder.setStatus("6"); //已关闭
+            cancleOrder.setCloseType(1); //关闭类型：超时未支付
+            ordersMapper.updateByPrimaryKeySelective(cancleOrder);
 
-        /*2、修改库存*/
-        //c、还原库存：先根据当前订单编号查询商品快照（skuid buy_count）--->修改product_sku
-        Example example1 = new Example(OrderItem.class);
-        Example.Criteria criteria1 = example1.createCriteria();
-        criteria1.andEqualTo("orderId",orderId);
-        List<OrderItem> orderItems = orderItemMapper.selectByExample(example1);
-        //还原库存
-        for (int j = 0; j < orderItems.size(); j++) {
-            OrderItem orderItem = orderItems.get(j);
-            //修改
-            ProductSku productSku = productSkuMapper.selectByPrimaryKey(orderItem.getSkuId());
-            productSku.setStock(productSku.getStock() + orderItem.getBuyCounts());
-            productSkuMapper.updateByPrimaryKey(productSku);
+            /*2、修改库存*/
+            //c、还原库存：先根据当前订单编号查询商品快照（skuid buy_count）--->修改product_sku
+            Example example1 = new Example(OrderItem.class);
+            Example.Criteria criteria1 = example1.createCriteria();
+            criteria1.andEqualTo("orderId", orderId);
+            List<OrderItem> orderItems = orderItemMapper.selectByExample(example1);
+            //还原库存
+            for (int j = 0; j < orderItems.size(); j++) {
+                OrderItem orderItem = orderItems.get(j);
+                //修改
+                ProductSku productSku = productSkuMapper.selectByPrimaryKey(orderItem.getSkuId());
+                productSku.setStock(productSku.getStock() + orderItem.getBuyCounts());
+                productSkuMapper.updateByPrimaryKey(productSku);
+            }
         }
     }
 }
