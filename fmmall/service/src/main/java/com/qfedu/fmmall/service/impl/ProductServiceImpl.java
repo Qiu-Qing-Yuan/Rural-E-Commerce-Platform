@@ -6,6 +6,7 @@ import com.qfedu.fmmall.dao.ProductParamsMapper;
 import com.qfedu.fmmall.dao.ProductSkuMapper;
 import com.qfedu.fmmall.entity.*;
 import com.qfedu.fmmall.service.ProductService;
+import com.qfedu.fmmall.utils.PageHelper;
 import com.qfedu.fmmall.vo.ResStatus;
 import com.qfedu.fmmall.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,4 +87,29 @@ public class ProductServiceImpl implements ProductService {
             return new ResultVO(ResStatus.NO,"此商品可能为三无产品",null);
         }
     }
+
+    @Override
+    public ResultVO getProductsByCategoryId(int categoryId, int pageNum, int limit) {
+         //1、查询分页数据
+        int start = (pageNum-1)*limit;
+        List<ProductVO> productVOS = productMapper.selectProductByCategoryId(categoryId, start, limit);
+        //2、查询当前类别下的商品的总记录数
+        Example example = new Example(Product.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("categoryId",categoryId);
+        int count = productMapper.selectCountByExample(example);
+        //3、计算总页数
+        int pageCount = count%limit==0?count/limit:count/limit+1;
+        //3、封装返回数据
+        PageHelper<ProductVO> pageHelper = new PageHelper<>(count, pageCount, productVOS);
+        return new ResultVO(ResStatus.OK,"SUCCESS",pageHelper);
+    }
+
+    @Override
+    public ResultVO listBrands(int categoryId) {
+        List<String> brands = productMapper.selectBrandByCategoryId(categoryId);
+        return new ResultVO(ResStatus.OK,"success",brands);
+    }
+
+
 }

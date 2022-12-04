@@ -18,4 +18,14 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="status" jdbcType="INTEGER" property="status" />
   </resultMap>
+
+  <select id="selectLowestPriceByProductId" resultMap="BaseResultMap">
+        select
+          sku_id,product_id,sku_name,sku_img,
+          untitled,original_price,sell_price,
+          discounts,stock,create_time,update_time,status
+        from product_sku
+        where product_id = #{productId}
+        ORDER BY sell_price limit 0,1
+  </select>
 </mapper>

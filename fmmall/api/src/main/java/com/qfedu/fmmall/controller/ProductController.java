@@ -56,4 +56,22 @@ public class ProductController {
         return productCommentsService.getCommentsCountByProductId(pid);
     }
 
+    @ApiOperation("根据类别查询商品接口")
+    @GetMapping("/listbycid/{cid}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "int", name = "pageNum", value = "当前页码", required = true),
+            @ApiImplicitParam(dataType = "int", name = "limit", value = "每页显示条数", required = true)
+    })
+    public ResultVO getProductsCategoryId(@PathVariable("cid") int cid,int pageNum,int limit){
+        return productService.getProductsByCategoryId(cid,pageNum,limit);
+    }
+
+    @ApiOperation("根据类别查询商品品牌接口")
+    @GetMapping("/listbrands/{cid}")
+    public ResultVO getBrandsByCategoryId(@PathVariable("cid") int cid){
+        return productService.listBrands(cid);
+    }
+
+
+
 }

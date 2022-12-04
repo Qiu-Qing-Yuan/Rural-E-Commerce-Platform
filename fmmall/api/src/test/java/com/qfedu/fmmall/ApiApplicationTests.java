@@ -2,8 +2,6 @@ package com.qfedu.fmmall;
 
 import com.qfedu.fmmall.dao.*;
 import com.qfedu.fmmall.entity.*;
-import com.qfedu.fmmall.vo.ResStatus;
-import com.qfedu.fmmall.vo.ResultVO;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
