@@ -6,6 +6,9 @@ import javax.persistence.*;
 
 @Table(name = "order_item")
 public class OrderItem {
+    public OrderItem() {
+    }
+
     /**
      * 订单项ID
      */

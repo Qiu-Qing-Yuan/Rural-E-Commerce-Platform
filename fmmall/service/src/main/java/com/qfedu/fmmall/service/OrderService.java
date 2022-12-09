@@ -15,4 +15,6 @@ public interface OrderService {
     public ResultVO getOrderById(String orderId);
 
     public void closeOrder(String orderId);
+
+    public ResultVO listOrders(String userId,String status,int pageNum,int limit);
 }

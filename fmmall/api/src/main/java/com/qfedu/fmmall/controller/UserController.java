@@ -2,6 +2,7 @@ package com.qfedu.fmmall.controller;
 
 import com.qfedu.fmmall.entity.Users;
 import com.qfedu.fmmall.service.UserService;
+import com.qfedu.fmmall.vo.ResStatus;
 import com.qfedu.fmmall.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -47,4 +48,9 @@ public class UserController {
         return userService.userRegister(user.getUsername(),user.getPassword());
     }
 
+    @ApiOperation("校验token是否过期接口")
+    @GetMapping("/check")
+    public ResultVO userTokenCheck(@RequestHeader("token")String token){
+        return new ResultVO(ResStatus.OK,"success",null);
+    }
 }

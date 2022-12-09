@@ -78,4 +78,18 @@ public class OrderController {
     public ResultVO getOrderStatus(@PathVariable("oid") String orderId,@RequestHeader("token")String token){
         return orderService.getOrderById(orderId);
     }
+
+    @GetMapping("/list")
+    @ApiOperation("订单查询接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "string", name = "userId", value = "用户ID", required = true),
+            @ApiImplicitParam(dataType = "string", name = "status", value = "订单状态", required = false),
+            @ApiImplicitParam(dataType = "int", name = "pageNum", value = "页码", required = true),
+            @ApiImplicitParam(dataType = "int", name = "limit", value = "每页显示条数", required = true)
+    })
+    public ResultVO list(@RequestHeader("token")String token,
+                         String userId,String status,int pageNum,int limit){
+        return orderService.listOrders(userId, status, pageNum, limit);
+    }
+
 }
