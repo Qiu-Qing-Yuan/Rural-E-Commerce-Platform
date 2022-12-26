@@ -25,6 +25,7 @@ import java.util.List;
  * @Description: TODO
  * @date 2022-08-18  17:57
  */
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired

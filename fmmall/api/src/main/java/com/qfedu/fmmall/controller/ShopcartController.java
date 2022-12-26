@@ -35,30 +35,26 @@ public class ShopcartController {
 
     @PostMapping("/add")
     public ResultVO addShoppingCart(@RequestBody ShoppingCart cart,@RequestHeader("token")String token) {
-        ResultVO resultVO = shoppingCartService.addShoppingCart(cart);
-        return resultVO;
+        return shoppingCartService.addShoppingCart(cart);
     }
 
     @GetMapping("/list")
     @ApiImplicitParam(dataType = "int", name = "userId", value = "用户ID", required = true)
     public ResultVO list(Integer userId,@RequestHeader("token")String token){
-        ResultVO resultVO = shoppingCartService.listShoppingCartsByUserId(userId);
-        return resultVO;
+        return shoppingCartService.listShoppingCartsByUserId(userId);
     }
 
     @PutMapping("/update/{cid}/{cnum}")
     public ResultVO updateNum(@PathVariable("cid") Integer cartId,
                               @PathVariable("cnum") Integer carNum,
                               @RequestHeader("token") String token ){
-        ResultVO resultVO = shoppingCartService.updateCartNum(cartId, carNum);
-        return resultVO;
+        return shoppingCartService.updateCartNum(cartId, carNum);
     }
 
     @GetMapping("/listbycids")
     @ApiImplicitParam(dataType = "String", name = "cids", value = "选择的购物车记录的ID", required = true)
     public ResultVO listByCids(String cids, @RequestHeader("token")String token){
-        ResultVO resultVO = shoppingCartService.listShoppingCartsByCids(cids);
-        return resultVO;
+        return shoppingCartService.listShoppingCartsByCids(cids);
     }
 }
 
