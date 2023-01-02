@@ -21,6 +21,7 @@
       <module name="api" options="-parameters" />
       <module name="beans" options="-parameters" />
       <module name="common" options="-parameters" />
+      <module name="fmmall" options="-parameters" />
       <module name="mapper" options="-parameters" />
       <module name="service" options="-parameters" />
     </option>
