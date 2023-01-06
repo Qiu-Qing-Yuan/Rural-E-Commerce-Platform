@@ -1,10 +1,13 @@
 package com.qfedu.fmmall.config;
 
 import com.qfedu.fmmall.interceptor.CheckTokenInterceptor;
+import com.qfedu.fmmall.interceptor.SetTimeInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.annotation.Resource;
 
 /**
  * @author QiuQingyuan
@@ -15,8 +18,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    @Autowired
+    @Resource
     private CheckTokenInterceptor checkTokenInterceptor;
+    @Resource
+    private SetTimeInterceptor setTimeInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -26,5 +31,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .addPathPatterns("/useraddr/**")
                 .excludePathPatterns("/user/**")
                 .addPathPatterns("/user/check");
+        registry.addInterceptor(setTimeInterceptor).addPathPatterns("/**").excludePathPatterns("/user/login");
     }
 }

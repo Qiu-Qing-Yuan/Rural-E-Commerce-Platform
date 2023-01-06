@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
+
 /**
  * @author QiuQingyuan
  * @version 1.0
@@ -24,13 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "提供首页数据显示所需的接口",tags = "首页管理")
 public class IndexController {
 
-    @Autowired
+    @Resource
     private IndexImgService indexImgService;
 
-    @Autowired
+    @Resource
     private CategoryService categoryService;
 
-    @Autowired
+    @Resource
     private ProductService productService;
 
     @GetMapping("/indeximg")

@@ -1,5 +1,7 @@
 package com.qfedu.fmmall.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qfedu.fmmall.dao.UsersMapper;
 import com.qfedu.fmmall.entity.Users;
 import com.qfedu.fmmall.service.UserService;
@@ -11,13 +13,16 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author QiuQingyuan
@@ -28,8 +33,12 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+    @Resource
     private UsersMapper usersMapper;
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Transactional
     public ResultVO userRegister(String name, String pwd) {
@@ -88,6 +97,15 @@ public class UserServiceImpl implements UserService {
                         .setExpiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000)) //设置token的过期时间
                         .signWith(SignatureAlgorithm.HS256, "Yuanchuang666")//设置加密方式和加密的密码
                         .compact();
+
+                //当用户登录成功之后，以token为key将用户信息保存到redis
+
+                try {
+                    String userInfo = objectMapper.writeValueAsString(users.get(0));
+                    stringRedisTemplate.boundValueOps(token).set(userInfo,30, TimeUnit.MINUTES);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
 
                 return new ResultVO(ResStatus.OK,token,users.get(0));
             }else {

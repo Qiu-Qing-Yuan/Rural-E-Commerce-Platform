@@ -5,13 +5,16 @@ import com.qfedu.fmmall.vo.ResStatus;
 import com.qfedu.fmmall.vo.ResultVO;
 import io.jsonwebtoken.*;
 import org.omg.CORBA.PRIVATE_MEMBER;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author QiuQingyuan
@@ -21,6 +24,10 @@ import java.io.PrintWriter;
  */
 @Component
 public class CheckTokenInterceptor implements HandlerInterceptor {
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String method = request.getMethod();
@@ -33,7 +40,15 @@ public class CheckTokenInterceptor implements HandlerInterceptor {
             //提示请先登录
             doResponse(response,resultVO);
         }else{
-            //如果token正确（密码正确，有效期内）则正常执行，否则抛出异常
+            String s = stringRedisTemplate.boundValueOps(token).get();
+            if (s == null){
+                ResultVO resultVO = new ResultVO(ResStatus.LOGIN_FAIL_NOT, "请先登录！", null);
+                doResponse(response,resultVO);
+            }else {
+                stringRedisTemplate.boundValueOps(token).expire(30, TimeUnit.MINUTES);
+                return true;
+            }
+           /* //如果token正确（密码正确，有效期内）则正常执行，否则抛出异常
             try{
                 //2.校验token
                 JwtParser parser = Jwts.parser();
@@ -50,7 +65,7 @@ public class CheckTokenInterceptor implements HandlerInterceptor {
             }catch (Exception e){
                 ResultVO resultVO = new ResultVO(ResStatus.LOGIN_FAIL_NOT,"请先登录！",null);
                 doResponse(response,resultVO);
-            }
+            }*/
         }
         return false;
     }

@@ -34,25 +34,48 @@ public class IndexImgServiceImpl implements IndexImgService {
     private StringRedisTemplate stringRedisTemplate;
 
     @Resource
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper;
 
     public ResultVO listIndexImgs() {
         List<IndexImg> indexImgs = null;
         try {
+            //1000个并发请求，请求轮播图
             //String结构缓存轮播图信息
 //        String imgsStr = stringRedisTemplate.opsForValue().get("indexImgs");
             String imgsStr = stringRedisTemplate.boundValueOps("indexImgs").get();
+
+            //1000个请求查询到的redis中的数据都是null
             if (imgsStr != null) {
                 //从redis中获取到了伦博图信息
                 JavaType javaType = objectMapper.getTypeFactory().constructParametricType(ArrayList.class, IndexImg.class);
                 indexImgs = objectMapper.readValue(imgsStr, javaType);
             } else {
                 //从redis中没有获取到信息，则查询数据库
-                indexImgs = indexImgMapper.listIndexImgs();
-                //写到redis
-                stringRedisTemplate.boundValueOps("indexImgs").set(objectMapper.writeValueAsString(indexImgs));
-                //设置redis过期时间为1天
-                stringRedisTemplate.boundValueOps("indexImgs").expire(1, TimeUnit.DAYS);
+                //1000个请求都会进入else（service类在spring容器中是单例的，1000分并发会启动1000个线程来处理，但是共用1个service实例）
+                synchronized (this){//让1000个请求串行起来，排队进入
+                    //第二次查询redis
+                    imgsStr = stringRedisTemplate.boundValueOps("indexImgs").get();
+                    if (imgsStr == null){
+                        //这1000个请求中，只有第一个请求再次查询redis时依然为null
+                        indexImgs = indexImgMapper.listIndexImgs();
+                        if(indexImgs != null){
+                            System.out.println("——————————查询数据库");
+                            //写到redis
+                            stringRedisTemplate.boundValueOps("indexImgs").set(objectMapper.writeValueAsString(indexImgs));
+                            //设置redis过期时间为1天
+                            stringRedisTemplate.boundValueOps("indexImgs").expire(1, TimeUnit.DAYS);
+                        }else{
+                            List<IndexImg> arr = new ArrayList<>();
+                            stringRedisTemplate.boundValueOps("indexImgs").set(objectMapper.writeValueAsString(arr));
+                            stringRedisTemplate.boundValueOps("indexImgs").expire(10, TimeUnit.SECONDS);
+                        }
+
+                    }else {
+                        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(ArrayList.class, IndexImg.class);
+                        indexImgs = objectMapper.readValue(imgsStr, javaType);
+                    }
+
+                }
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
