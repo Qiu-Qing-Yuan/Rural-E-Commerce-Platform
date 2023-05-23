@@ -43,4 +43,10 @@ public interface ProductMapper extends GeneralDAO<Product> {
     public List<ProductVO> selectProductByKeyword(@Param("kw") String keyword,
                                                      @Param("start")int start,
                                                      @Param("limit") int limit);
+
+    /*
+     *@Description: 查询所有
+     **/
+    public List<ProductVO> selectProducts();
+
 }

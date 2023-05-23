@@ -5,4 +5,8 @@ import com.qfedu.fmmall.vo.ResultVO;
 public interface IndexImgService {
 
     public ResultVO listIndexImgs();
+
+
+
+
 }

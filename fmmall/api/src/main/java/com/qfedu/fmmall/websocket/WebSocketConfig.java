@@ -10,7 +10,7 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
  * @Description: TODO
  * @date 2022-11-24  22:38
  */
-@Configuration
+//@Configuration
 public class WebSocketConfig {
 
     @Bean //配置到Spring容器

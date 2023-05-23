@@ -11,9 +11,17 @@ spring:
     port: 6379
     host: 39.101.77.112
     database: 0
+  elasticsearch:
+    uris: https://39.101.77.112
 mybatis:
   mapper-locations: classpath:mappers/*Mapper.xml
   type-aliases-package: com.qfedu.fmmall.entity
 logging:
   level:
     io.swagger.models.parameters.AbstractSerializableParameter: error
+redisson:
+  addr:
+    singleAddr:
+      host: redis://39.101.77.112:6379
+      password: root
+      database: 0
